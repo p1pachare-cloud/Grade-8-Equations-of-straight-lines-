@@ -7,8 +7,6 @@ import LineLabStation from '../simulations/LineLabStation';
 import EquationBuilderStation from '../simulations/EquationBuilderStation';
 import StreetPlannerStation from '../simulations/StreetPlannerStation';
 import Mascot from '../Mascot';
-import { stationLearnNarration } from '../../utils/narration';
-import { narrate } from '../../utils/audio';
 
 export default function SimulatePhase({
   onNext,
@@ -26,7 +24,6 @@ export default function SimulatePhase({
 
     if (index < 3) {
       setStationIdx(index + 1);
-      narrate(stationLearnNarration(index + 1), audioEnabled);
     } else {
       try {
         confetti({
@@ -65,7 +62,6 @@ export default function SimulatePhase({
                   className={`station-hub-card ${isActive ? 'is-active-station' : ''} ${isDone ? 'is-station-done' : ''}`}
                   onClick={() => {
                     setStationIdx(i);
-                    narrate(stationLearnNarration(i), audioEnabled);
                   }}
                 >
                   <div className="station-card-icon-row">
@@ -109,7 +105,6 @@ export default function SimulatePhase({
                 onClick={() => {
                   const nextIdx = stationIdx + 1;
                   setStationIdx(nextIdx);
-                  narrate(stationLearnNarration(nextIdx), audioEnabled);
                 }}
                 style={{
                   padding: '10px 22px',
@@ -178,7 +173,6 @@ export default function SimulatePhase({
                 onClick={() => {
                   const nextIdx = stationIdx + 1;
                   setStationIdx(nextIdx);
-                  narrate(stationLearnNarration(nextIdx), audioEnabled);
                 }}
                 style={{
                   background: completedStations[stationIdx]

@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, HelpCircle } from 'lucide-react';
 import Mascot from '../Mascot';
 import CoordinatePlane from '../shared/CoordinatePlane';
-import { wonderNarration } from '../../utils/narration';
-import { narrate, playClick, playChime } from '../../utils/audio';
+import { stopNarration, playClick, playChime } from '../../utils/audio';
 
-export default function WonderPhase({ onNext, audioEnabled }) {
+export default function WonderPhase({ onNext }) {
   const [seconds, setSeconds] = useState(3);
   const [revealed, setRevealed] = useState(false);
 
@@ -19,8 +18,8 @@ export default function WonderPhase({ onNext, audioEnabled }) {
   }
 
   useEffect(() => {
-    narrate(wonderNarration(), audioEnabled);
-  }, [audioEnabled]);
+    stopNarration();
+  }, []);
 
   const handleReveal = () => {
     playChime();

@@ -3,12 +3,10 @@ import { Sparkles, CheckCircle2, RotateCcw } from 'lucide-react';
 import Mascot from '../Mascot';
 import { BADGES } from '../../utils/badgeEngine';
 import { getArchitectTitle } from '../../utils/scoring';
-import { reflectNarration } from '../../utils/narration';
-import { narrate, playChime } from '../../utils/audio';
+import { stopNarration, playChime } from '../../utils/audio';
 
 export default function ReflectPhase({
   onRestart,
-  audioEnabled,
   xp,
   worldScores = [],
   unlockedBadges = [],
@@ -17,8 +15,8 @@ export default function ReflectPhase({
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    narrate(reflectNarration(), audioEnabled);
-  }, [audioEnabled]);
+    stopNarration();
+  }, []);
 
   const handleSaveJournal = () => {
     playChime();

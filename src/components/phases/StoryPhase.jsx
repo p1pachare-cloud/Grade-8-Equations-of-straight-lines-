@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, MapPin, Box, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, ArrowRight, MapPin, Image as ImageIcon, Compass, Sparkles, Maximize2, X } from 'lucide-react';
 import Mascot from '../Mascot';
 import { STORY_PANELS } from '../../data/storyContent';
-import { getStoryNarration } from '../../utils/narration';
-import { narrate } from '../../utils/audio';
+import { stopNarration } from '../../utils/audio';
 
-export default function StoryPhase({ onNext, audioEnabled }) {
+export default function StoryPhase({ onNext }) {
   const [panelIndex, setPanelIndex] = useState(0);
-  const [viewMode, setViewMode] = useState('interactive'); // 'interactive' | 'model'
+  const [viewMode, setViewMode] = useState('image'); // 'image' | 'diagram'
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const panel = STORY_PANELS[panelIndex];
 
+  // Stop any voice narration in the story phase
   useEffect(() => {
-    narrate(getStoryNarration(panelIndex), audioEnabled);
-  }, [panelIndex, audioEnabled]);
+    stopNarration();
+    return () => {
+      stopNarration();
+    };
+  }, [panelIndex]);
 
   const handleNext = () => {
     if (panelIndex < STORY_PANELS.length - 1) {
@@ -58,125 +62,186 @@ export default function StoryPhase({ onNext, audioEnabled }) {
                 <span>{panel.location}</span>
               </div>
 
+              {/* View Switcher: Story Illustration vs Math Diagram */}
+              <div className="story-view-toggle">
+                <button
+                  className={`story-toggle-btn ${viewMode === 'image' ? 'active' : ''}`}
+                  onClick={() => setViewMode('image')}
+                  title="View Story Illustration Scene"
+                >
+                  <ImageIcon size={14} />
+                  <span>Story Scene</span>
+                </button>
+                <button
+                  className={`story-toggle-btn ${viewMode === 'diagram' ? 'active' : ''}`}
+                  onClick={() => setViewMode('diagram')}
+                  title="View Math Blueprint Diagram"
+                >
+                  <Compass size={14} />
+                  <span>Math Blueprint</span>
+                </button>
+              </div>
+
               <div className="panel-counter-badge">
-                <span>Panel {panelIndex + 1} of 6</span>
+                <span>Panel {panelIndex + 1} of {STORY_PANELS.length}</span>
               </div>
             </div>
 
-            {/* Visual Graphic Representation */}
+            {/* Visual Display Container */}
             <div className="visual-graphic-container">
-              {panel.visualType === 'worldMap' && (
-                <svg width="300" height="220" viewBox="0 0 300 220">
-                  <ellipse cx="150" cy="110" rx="130" ry="85" fill="none" stroke="#283593" strokeWidth="2" strokeDasharray="5,5" />
-                  <ellipse cx="150" cy="110" rx="90" ry="55" fill="none" stroke="#3f51b5" strokeWidth="1.5" />
-                  {/* Glowing Character Pins */}
-                  {[
-                    { x: 60, y: 80, label: 'John (Toronto)' },
-                    { x: 80, y: 100, label: 'Mike (New York)' },
-                    { x: 140, y: 70, label: 'Sarah (London)' },
-                    { x: 155, y: 85, label: 'Sofia (Madrid)' },
-                    { x: 170, y: 110, label: 'Aisha (Cairo)' },
-                    { x: 230, y: 90, label: 'Yuki (Tokyo)' },
-                    { x: 210, y: 120, label: 'Priya (Mumbai)' },
-                    { x: 160, y: 160, label: 'Noah (Nairobi)' },
-                    { x: 100, y: 170, label: 'Diego (Buenos Aires)' },
-                    { x: 260, y: 170, label: 'Emma (Sydney)' },
-                  ].map((pin, i) => (
-                    <g key={i}>
-                      <circle cx={pin.x} cy={pin.y} r="5" fill="#00e5ff" />
-                      <circle cx={pin.x} cy={pin.y} r="8" fill="none" stroke="#00e5ff" strokeWidth="1" strokeDasharray="2,2" />
-                    </g>
-                  ))}
-                  <text x="150" y="115" fill="#ffd54f" textAnchor="middle" fontSize="14" fontWeight="bold">
-                    The Straight Line Squad
-                  </text>
-                </svg>
-              )}
+              {viewMode === 'image' ? (
+                <div className="story-image-stage">
+                  <img
+                    key={panel.id}
+                    src={panel.image}
+                    alt={panel.imageAlt || panel.title}
+                    className="story-illustration-img"
+                    onClick={() => setIsModalOpen(true)}
+                  />
+                  <div className="story-image-gradient-overlay" />
 
-              {panel.visualType === 'droneSignal' && (
-                <svg width="300" height="220" viewBox="0 0 300 220">
-                  <rect x="20" y="20" width="260" height="180" rx="12" fill="#0d0a2d" stroke="#00e5ff" strokeWidth="2" />
-                  {/* Drone SVG */}
-                  <circle cx="150" cy="90" r="18" fill="#ffd54f" />
-                  <line x1="120" y1="80" x2="180" y2="100" stroke="#00e5ff" strokeWidth="3" />
-                  <line x1="120" y1="100" x2="180" y2="80" stroke="#00e5ff" strokeWidth="3" />
-                  <circle cx="120" cy="80" r="6" fill="#ff4081" />
-                  <circle cx="180" cy="80" r="6" fill="#ff4081" />
-                  <circle cx="120" cy="100" r="6" fill="#ff4081" />
-                  <circle cx="180" cy="100" r="6" fill="#ff4081" />
-                  <text x="150" y="145" fill="#ffffff" textAnchor="middle" fontSize="13" fontWeight="bold">
-                    📡 Skylark Drone Beacon Signal
-                  </text>
-                  <text x="150" y="170" fill="#ef5350" textAnchor="middle" fontSize="12" fontWeight="bold">
-                    ⚠️ Battery at 30% · Linear Flight Path
-                  </text>
-                </svg>
-              )}
+                  <div className="story-image-hud">
+                    <div className="story-tagline-chip">
+                      <Sparkles size={14} className="tagline-icon" />
+                      <span>{panel.tagline || panel.title}</span>
+                    </div>
 
-              {panel.visualType === 'skateboardRamp' && (
-                <svg width="300" height="220" viewBox="0 0 300 220">
-                  <polygon points="50,170 250,170 250,70" fill="rgba(0,229,255,0.15)" stroke="#00e5ff" strokeWidth="3" />
-                  <line x1="50" y1="170" x2="250" y2="70" stroke="#ffd54f" strokeWidth="4" strokeLinecap="round" />
-                  <text x="150" y="195" fill="#00e5ff" textAnchor="middle" fontSize="13" fontWeight="bold">
-                    Run = 6 m
-                  </text>
-                  <text x="270" y="125" fill="#ffd54f" textAnchor="middle" fontSize="13" fontWeight="bold">
-                    Rise = 3 m
-                  </text>
-                  <text x="130" y="110" fill="#ffffff" textAnchor="middle" fontSize="14" fontWeight="bold">
-                    Slope = 3 / 6 = 1/2
-                  </text>
-                </svg>
-              )}
+                    <button
+                      className="story-expand-btn"
+                      onClick={() => setIsModalOpen(true)}
+                      title="Enlarge Illustration"
+                      aria-label="Enlarge Illustration"
+                    >
+                      <Maximize2 size={15} />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="story-diagram-stage">
+                  {panel.visualType === 'worldMap' && (
+                    <svg width="300" height="220" viewBox="0 0 300 220">
+                      <ellipse cx="150" cy="110" rx="130" ry="85" fill="none" stroke="#283593" strokeWidth="2" strokeDasharray="5,5" />
+                      <ellipse cx="150" cy="110" rx="90" ry="55" fill="none" stroke="#3f51b5" strokeWidth="1.5" />
+                      {[
+                        { x: 60, y: 80, label: 'John (Toronto)' },
+                        { x: 80, y: 100, label: 'Mike (New York)' },
+                        { x: 140, y: 70, label: 'Sarah (London)' },
+                        { x: 155, y: 85, label: 'Sofia (Madrid)' },
+                        { x: 170, y: 110, label: 'Aisha (Cairo)' },
+                        { x: 230, y: 90, label: 'Yuki (Tokyo)' },
+                        { x: 210, y: 120, label: 'Priya (Mumbai)' },
+                        { x: 160, y: 160, label: 'Noah (Nairobi)' },
+                        { x: 100, y: 170, label: 'Diego (Buenos Aires)' },
+                        { x: 260, y: 170, label: 'Emma (Sydney)' },
+                      ].map((pin, i) => (
+                        <g key={i}>
+                          <circle cx={pin.x} cy={pin.y} r="5" fill="#00e5ff" />
+                          <circle cx={pin.x} cy={pin.y} r="8" fill="none" stroke="#00e5ff" strokeWidth="1" strokeDasharray="2,2" />
+                        </g>
+                      ))}
+                      <text x="150" y="115" fill="#ffd54f" textAnchor="middle" fontSize="14" fontWeight="bold">
+                        The Straight Line Squad
+                      </text>
+                    </svg>
+                  )}
 
-              {panel.visualType === 'taxiFare' && (
-                <svg width="300" height="220" viewBox="0 0 300 220">
-                  <line x1="50" y1="180" x2="250" y2="180" stroke="rgba(255,255,255,0.4)" strokeWidth="2" />
-                  <line x1="50" y1="180" x2="50" y2="30" stroke="rgba(255,255,255,0.4)" strokeWidth="2" />
-                  <line x1="50" y1="140" x2="230" y2="50" stroke="#00e5ff" strokeWidth="3" />
-                  <circle cx="50" cy="140" r="7" fill="#ffd54f" />
-                  <text x="58" y="135" fill="#ffd54f" fontSize="12" fontWeight="bold">
-                    (0, 3) Starting Fare c = £3
-                  </text>
-                  <text x="160" y="80" fill="#00e5ff" fontSize="13" fontWeight="bold">
-                    y = 2x + 3 (+£2/km)
-                  </text>
-                </svg>
-              )}
+                  {panel.visualType === 'droneSignal' && (
+                    <svg width="300" height="220" viewBox="0 0 300 220">
+                      <rect x="20" y="20" width="260" height="180" rx="12" fill="#0d0a2d" stroke="#00e5ff" strokeWidth="2" />
+                      <circle cx="150" cy="90" r="18" fill="#ffd54f" />
+                      <line x1="120" y1="80" x2="180" y2="100" stroke="#00e5ff" strokeWidth="3" />
+                      <line x1="120" y1="100" x2="180" y2="80" stroke="#00e5ff" strokeWidth="3" />
+                      <circle cx="120" cy="80" r="6" fill="#ff4081" />
+                      <circle cx="180" cy="80" r="6" fill="#ff4081" />
+                      <circle cx="120" cy="100" r="6" fill="#ff4081" />
+                      <circle cx="180" cy="100" r="6" fill="#ff4081" />
+                      <text x="150" y="145" fill="#ffffff" textAnchor="middle" fontSize="13" fontWeight="bold">
+                        📡 Skylark Drone Beacon Signal
+                      </text>
+                      <text x="150" y="170" fill="#ef5350" textAnchor="middle" fontSize="12" fontWeight="bold">
+                        ⚠️ Battery at 30% · Linear Flight Path
+                      </text>
+                    </svg>
+                  )}
 
-              {panel.visualType === 'trainAndGrid' && (
-                <svg width="300" height="220" viewBox="0 0 300 220">
-                  {/* Parallel Tracks */}
-                  <line x1="30" y1="140" x2="130" y2="50" stroke="#00e5ff" strokeWidth="3" />
-                  <line x1="50" y1="160" x2="150" y2="70" stroke="#00e5ff" strokeWidth="3" />
-                  <text x="80" y="180" fill="#00e5ff" fontSize="11" fontWeight="bold">
-                    Parallel: m₁ = m₂
-                  </text>
+                  {panel.visualType === 'skateboardRamp' && (
+                    <svg width="300" height="220" viewBox="0 0 300 220">
+                      <polygon points="50,170 250,170 250,70" fill="rgba(0,229,255,0.15)" stroke="#00e5ff" strokeWidth="3" />
+                      <line x1="50" y1="170" x2="250" y2="70" stroke="#ffd54f" strokeWidth="4" strokeLinecap="round" />
+                      <text x="150" y="195" fill="#00e5ff" textAnchor="middle" fontSize="13" fontWeight="bold">
+                        Run = 6 m
+                      </text>
+                      <text x="270" y="125" fill="#ffd54f" textAnchor="middle" fontSize="13" fontWeight="bold">
+                        Rise = 3 m
+                      </text>
+                      <text x="130" y="110" fill="#ffffff" textAnchor="middle" fontSize="14" fontWeight="bold">
+                        Slope = 3 / 6 = 1/2
+                      </text>
+                    </svg>
+                  )}
 
-                  {/* Perpendicular Intersect */}
-                  <line x1="180" y1="150" x2="270" y2="60" stroke="#ffd54f" strokeWidth="3" />
-                  <line x1="190" y1="60" x2="280" y2="150" stroke="#ff4081" strokeWidth="3" />
-                  <rect x="227" y="100" width="10" height="10" fill="none" stroke="#ffffff" strokeWidth="1.5" />
-                  <text x="230" y="180" fill="#ffd54f" fontSize="11" fontWeight="bold">
-                    Perpendicular: m₁ × m₂ = −1
-                  </text>
-                </svg>
-              )}
+                  {panel.visualType === 'taxiFare' && (
+                    <svg width="300" height="220" viewBox="0 0 300 220">
+                      <line x1="50" y1="180" x2="250" y2="180" stroke="rgba(255,255,255,0.4)" strokeWidth="2" />
+                      <line x1="50" y1="180" x2="50" y2="30" stroke="rgba(255,255,255,0.4)" strokeWidth="2" />
+                      <line x1="50" y1="140" x2="230" y2="50" stroke="#00e5ff" strokeWidth="3" />
+                      <circle cx="50" cy="140" r="7" fill="#ffd54f" />
+                      <text x="58" y="135" fill="#ffd54f" fontSize="12" fontWeight="bold">
+                        (0, 3) Starting Fare c = £3
+                      </text>
+                      <text x="160" y="80" fill="#00e5ff" fontSize="13" fontWeight="bold">
+                        y = 2x + 3 (+£2/km)
+                      </text>
+                    </svg>
+                  )}
 
-              {panel.visualType === 'rescuePlot' && (
-                <svg width="300" height="220" viewBox="0 0 300 220">
-                  <line x1="40" y1="180" x2="260" y2="180" stroke="rgba(255,255,255,0.3)" strokeWidth="2" />
-                  <line x1="40" y1="180" x2="40" y2="30" stroke="rgba(255,255,255,0.3)" strokeWidth="2" />
-                  <line x1="40" y1="150" x2="220" y2="40" stroke="#00e5ff" strokeWidth="3" strokeDasharray="4,4" />
-                  <circle cx="40" cy="150" r="7" fill="#ffd54f" />
-                  <circle cx="160" cy="77" r="7" fill="#00e676" />
-                  <text x="50" y="145" fill="#ffd54f" fontSize="12" fontWeight="bold">A (0, 2)</text>
-                  <text x="170" y="75" fill="#00e676" fontSize="12" fontWeight="bold">B (4, 10)</text>
-                  <text x="130" y="125" fill="#ffffff" fontSize="13" fontWeight="bold">
-                    Path: y = 2x + 2
-                  </text>
-                </svg>
+                  {panel.visualType === 'trainAndGrid' && (
+                    <svg width="300" height="220" viewBox="0 0 300 220">
+                      <line x1="30" y1="140" x2="130" y2="50" stroke="#00e5ff" strokeWidth="3" />
+                      <line x1="50" y1="160" x2="150" y2="70" stroke="#00e5ff" strokeWidth="3" />
+                      <text x="80" y="180" fill="#00e5ff" fontSize="11" fontWeight="bold">
+                        Parallel: m₁ = m₂
+                      </text>
+                      <line x1="180" y1="150" x2="270" y2="60" stroke="#ffd54f" strokeWidth="3" />
+                      <line x1="190" y1="60" x2="280" y2="150" stroke="#ff4081" strokeWidth="3" />
+                      <rect x="227" y="100" width="10" height="10" fill="none" stroke="#ffffff" strokeWidth="1.5" />
+                      <text x="230" y="180" fill="#ffd54f" fontSize="11" fontWeight="bold">
+                        Perpendicular: m₁ × m₂ = −1
+                      </text>
+                    </svg>
+                  )}
+
+                  {panel.visualType === 'rescuePlot' && (
+                    <svg width="300" height="220" viewBox="0 0 300 220">
+                      <line x1="40" y1="180" x2="260" y2="180" stroke="rgba(255,255,255,0.3)" strokeWidth="2" />
+                      <line x1="40" y1="180" x2="40" y2="30" stroke="rgba(255,255,255,0.3)" strokeWidth="2" />
+                      <line x1="40" y1="150" x2="220" y2="40" stroke="#00e5ff" strokeWidth="3" strokeDasharray="4,4" />
+                      <circle cx="40" cy="150" r="7" fill="#ffd54f" />
+                      <circle cx="160" cy="77" r="7" fill="#00e676" />
+                      <text x="50" y="145" fill="#ffd54f" fontSize="12" fontWeight="bold">A (0, 2)</text>
+                      <text x="170" y="75" fill="#00e676" fontSize="12" fontWeight="bold">B (4, 10)</text>
+                      <text x="130" y="125" fill="#ffffff" fontSize="13" fontWeight="bold">
+                        Path: y = 2x + 2
+                      </text>
+                    </svg>
+                  )}
+                </div>
               )}
+            </div>
+
+            {/* Thumbnail Navigation Strip */}
+            <div className="story-thumbnail-strip">
+              {STORY_PANELS.map((p, idx) => (
+                <button
+                  key={p.id}
+                  className={`story-thumb-card ${idx === panelIndex ? 'active' : ''}`}
+                  onClick={() => setPanelIndex(idx)}
+                  title={`Panel ${idx + 1}: ${p.title}`}
+                >
+                  <img src={p.image} alt={p.title} className="story-thumb-img" />
+                  <span className="story-thumb-badge">{idx + 1}</span>
+                </button>
+              ))}
             </div>
           </div>
 
@@ -211,6 +276,26 @@ export default function StoryPhase({ onNext, audioEnabled }) {
           </div>
         </div>
       </div>
+
+      {/* Fullscreen Lightbox Modal */}
+      {isModalOpen && (
+        <div className="story-modal-backdrop" onClick={() => setIsModalOpen(false)}>
+          <div className="story-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="story-modal-close-btn"
+              onClick={() => setIsModalOpen(false)}
+              aria-label="Close image modal"
+            >
+              <X size={20} />
+            </button>
+            <img src={panel.image} alt={panel.imageAlt} className="story-modal-img" />
+            <div className="story-modal-caption">
+              <h4>{panel.title} — {panel.location}</h4>
+              <p>{panel.tagline || panel.dialogue}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

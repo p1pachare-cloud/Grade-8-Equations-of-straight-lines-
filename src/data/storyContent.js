@@ -4,6 +4,9 @@ export const STORY_PANELS = [
     title: 'The Global Squad Assembles',
     location: 'Global Online Call 🌍',
     visualType: 'worldMap',
+    image: '/assets/story/panel1_squad_assemble.jpg',
+    imageAlt: 'The Straight Line Squad: friends from Toronto, New York, London, Cairo, Mumbai and Tokyo assembled around a glowing holographic world map',
+    tagline: '10 explorers unite across the globe to decode straight lines',
     characters: ['John', 'Mike', 'Sarah', 'Emma', 'Liam', 'Sofia', 'Noah', 'Aisha', 'Carlos', 'Yuki'],
     dialogue:
       'John, Mike, Sarah, Emma, Liam, Sofia, Noah, Aisha, Carlos, and Yuki are friends from ten different countries. They call themselves the Straight Line Squad, and they meet online to solve puzzles about lines.',
@@ -14,6 +17,9 @@ export const STORY_PANELS = [
     title: 'Emergency: Skylark Lost Signal',
     location: 'London Weather Bureau 📡',
     visualType: 'droneSignal',
+    image: '/assets/story/panel2_skylark_signal.jpg',
+    imageAlt: 'Weather research drone Skylark transmitting emergency battery 30% beacon and linear coordinates over night London',
+    tagline: 'Skylark is flying in a linear trajectory with only 30% battery remaining',
     dialogue:
       'One night, a signal arrives from Skylark, a little weather drone that has lost its way. It can only send a few numbers, so the squad must work out its flight path before the battery runs out!',
     whisper: 'Battery at 30%! Skylark flies in perfectly straight lines.',
@@ -23,6 +29,9 @@ export const STORY_PANELS = [
     title: 'Mike’s Skateboard Ramp',
     location: 'New York, USA 🇺🇸',
     visualType: 'skateboardRamp',
+    image: '/assets/story/panel3_skate_ramp.jpg',
+    imageAlt: 'Mike at a New York skatepark illustrating slope = rise / run = 3 / 6 = 1/2 on a skate ramp',
+    tagline: 'Slope is steepness: Rise = 3m, Run = 6m, Slope = 1/2',
     dialogue:
       'Mike builds a skateboard ramp in New York. The ramp rises three metres over a run of six metres. How steep is it? Mike calls this steepness the slope.',
     whisper: 'Rise = 3, Run = 6 → Slope = 3 / 6 = 1/2.',
@@ -32,6 +41,9 @@ export const STORY_PANELS = [
     title: 'Sarah’s Taxi Journey',
     location: 'London, UK 🇬🇧',
     visualType: 'taxiFare',
+    image: '/assets/story/panel4_taxi_journey.jpg',
+    imageAlt: 'Sarah by a London black cab with a holographic graph showing y = 2x + 3 and starting fare c = £3',
+    tagline: 'Starting cost c = 3 (y-intercept) and rate m = £2/km: y = 2x + 3',
     dialogue:
       'Sarah takes a taxi in London. It costs three pounds just to start, plus two pounds for every kilometre. She notices the cost grows along a perfectly straight line, and the starting cost is where the line crosses the y-axis.',
     whisper: 'Initial cost c = 3 (y-intercept); rate m = 2 per km. Cost y = 2x + 3!',
@@ -41,6 +53,9 @@ export const STORY_PANELS = [
     title: 'Parallel Tracks & Perpendicular Streets',
     location: 'Tokyo & Mumbai 🇯🇵 🇮🇳',
     visualType: 'trainAndGrid',
+    image: '/assets/story/panel5_parallel_perpendicular.jpg',
+    imageAlt: 'Yuki observing parallel bullet trains in Tokyo (m1 = m2) and Priya at a perpendicular street intersection in Mumbai (m1 × m2 = -1)',
+    tagline: 'Parallel lines never meet (m₁ = m₂); Perpendicular lines cross at 90° (m₁ × m₂ = -1)',
     dialogue:
       'Yuki sees two bullet-train tracks running side by side in Tokyo. They never meet, because they have the same slope. Priya notices that the streets in Mumbai cross at right angles, and their slopes are flipped and negative, like two and negative one half.',
     whisper: 'Parallel lines have equal slopes: m₁ = m₂. Perpendicular lines multiply to -1: m₁ × m₂ = -1.',
@@ -50,6 +65,9 @@ export const STORY_PANELS = [
     title: 'The Final Coordinates for Skylark',
     location: 'Cairo, Egypt 🇪🇬',
     visualType: 'rescuePlot',
+    image: '/assets/story/panel6_skylark_rescue.jpg',
+    imageAlt: 'Aisha in Cairo calculating flight equation y = 2x + 2 between (0, 2) and (4, 10) to rescue Skylark',
+    tagline: 'Two points A(0, 2) and B(4, 10) reveal the equation y = 2x + 2',
     dialogue:
       'Aisha in Cairo has the final clue. Skylark flew from the point zero, two to the point four, ten. If we can find the equation of its path, we can find exactly where it will be next. Are you ready to help the squad?',
     whisper: 'Slope m = (10 - 2) / (4 - 0) = 2, Intercept c = 2 → y = 2x + 2! Enter the Simulation Lab to master lines!',

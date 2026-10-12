@@ -6,12 +6,10 @@ import FeedbackOverlay from '../shared/FeedbackOverlay';
 import { WORLDS } from '../../data/worlds';
 import { buildSession } from '../../generators';
 import { calcXP, calcStars } from '../../utils/scoring';
-import { narrate, playChime, playBuzz } from '../../utils/audio';
-import { correctNarration, incorrectNarration } from '../../utils/narration';
+import { playChime, playBuzz } from '../../utils/audio';
 
 export default function PracticePhase({
   onNext,
-  audioEnabled,
   xp,
   setXp,
   streak,
@@ -61,7 +59,6 @@ export default function PracticePhase({
         onSlopeMasterSolved();
       }
 
-      narrate(correctNarration(), audioEnabled);
       setFeedback({
         isCorrect: true,
         xpEarned,
@@ -73,7 +70,6 @@ export default function PracticePhase({
       const nextAttempt = attemptCount + 1;
       setAttemptCount(nextAttempt);
 
-      narrate(incorrectNarration(), audioEnabled);
       if (nextAttempt >= 3) {
         setFeedback({
           isCorrect: false,

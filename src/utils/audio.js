@@ -36,38 +36,10 @@ export function stopNarration() {
   }
 }
 
-export async function narrate(segments, audioEnabled = true) {
+// Voice narration completely removed per user request
+export async function narrate() {
   stopNarration();
-  if (!audioEnabled || !segments) return;
-
-  const list = Array.isArray(segments) ? segments : [segments];
-  for (const seg of list) {
-    if (!seg || !seg.text) continue;
-    const text = seg.text;
-
-    // Check if pre-recorded .mp3 exists in audioMap
-    const staticUrl = audioMap[text];
-    if (staticUrl) {
-      await new Promise((resolve) => {
-        const audio = new Audio(staticUrl);
-        currentAudio = audio;
-        audio.onended = () => resolve();
-        audio.onerror = () => resolve();
-        audio.play().catch(() => resolve());
-      });
-    } else if (typeof window !== 'undefined' && window.speechSynthesis) {
-      // Clean, polite Web Speech synthesis as dynamic fallback
-      await new Promise((resolve) => {
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.rate = 1.0;
-        utter.pitch = 1.05;
-        currentUtterance = utter;
-        utter.onend = () => resolve();
-        utter.onerror = () => resolve();
-        window.speechSynthesis.speak(utter);
-      });
-    }
-  }
+  return Promise.resolve();
 }
 
 // Synthesized Web Audio sound effects
