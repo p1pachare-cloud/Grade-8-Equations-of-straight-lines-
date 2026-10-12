@@ -1,0 +1,58 @@
+export const BADGES = [
+  {
+    id: 'line_starter',
+    label: '🏅 Line Starter',
+    title: 'Line Starter',
+    description: 'Completed Wonder & Story phases.',
+    icon: '🏅',
+  },
+  {
+    id: 'line_builder',
+    label: '🥈 Line Builder',
+    title: 'Line Builder',
+    description: 'Completed all 4 Simulation Stations.',
+    icon: '🥈',
+  },
+  {
+    id: 'line_legend',
+    label: '🥇 Line Legend',
+    title: 'Line Legend',
+    description: 'Scored 80 or more across the 10 Worlds.',
+    icon: '🥇',
+  },
+  {
+    id: 'perfect_path',
+    label: '💎 Perfect Path',
+    title: 'Perfect Path',
+    description: 'Scored a perfect 10/10 in any World.',
+    icon: '💎',
+  },
+  {
+    id: 'streak_star',
+    label: '🔥 Streak Star',
+    title: 'Streak Star',
+    description: 'Achieved a streak of 10 correct answers in a row.',
+    icon: '🔥',
+  },
+  {
+    id: 'global_explorer',
+    label: '🌍 Global Explorer',
+    title: 'Global Explorer',
+    description: 'Completed all 6 phases of the lesson module.',
+    icon: '🌍',
+  },
+  {
+    id: 'pinpoint',
+    label: '🎯 Pinpoint',
+    title: 'Pinpoint',
+    description: 'Finished Station A challenges with zero mistakes.',
+    icon: '🎯',
+  },
+  {
+    id: 'slope_master',
+    label: '⛰️ Slope Master',
+    title: 'Slope Master',
+    description: 'Solved 10 negative or fractional slope challenges.',
+    icon: '⛰️',
+  },
+];
