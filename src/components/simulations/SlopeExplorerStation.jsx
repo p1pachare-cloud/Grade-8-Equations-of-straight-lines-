@@ -43,6 +43,8 @@ export default function SlopeExplorerStation({ onComplete, audioEnabled }) {
   const currentRound = ROUNDS[roundIdx];
   const isTargetMatched = currentSlope && currentRound && currentSlope.equals(currentRound.targetM);
 
+  const [isStationFinished, setIsStationFinished] = useState(false);
+
   const handlePointMove = (idx, newPt) => {
     const updated = [...points];
     updated[idx] = newPt;
@@ -59,7 +61,7 @@ export default function SlopeExplorerStation({ onComplete, audioEnabled }) {
           ROUNDS[roundIdx + 1].initialB,
         ]);
       } else {
-        onComplete();
+        setIsStationFinished(true);
       }
     } else {
       playBuzz();
@@ -243,22 +245,79 @@ export default function SlopeExplorerStation({ onComplete, audioEnabled }) {
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <button
                 className="btn btn-primary"
                 onClick={handleCheckChallenge}
                 disabled={!isTargetMatched}
-                style={{ flex: 1 }}
+                style={{
+                  width: '100%',
+                  background: isTargetMatched && roundIdx === ROUNDS.length - 1
+                    ? 'linear-gradient(135deg, #00e676 0%, #00e5ff 100%)'
+                    : undefined,
+                  color: isTargetMatched && roundIdx === ROUNDS.length - 1
+                    ? '#0a0a2e'
+                    : undefined,
+                  fontWeight: 900,
+                }}
               >
                 {isTargetMatched ? (
                   <>
                     <CheckCircle size={18} />
-                    <span>{roundIdx < ROUNDS.length - 1 ? 'Correct! Next Round' : 'Complete Station A! ✓'}</span>
+                    <span>
+                      {roundIdx < ROUNDS.length - 1
+                        ? 'Correct! Next Round'
+                        : 'Complete Simulation 1 & Go to Next Simulation (Phase 2) ➔'}
+                    </span>
                   </>
                 ) : (
                   <span>Adjust Point B to Match</span>
                 )}
               </button>
+
+              {isStationFinished && (
+                <div
+                  className="glass-card"
+                  style={{
+                    padding: '18px 20px',
+                    background: 'linear-gradient(135deg, rgba(0, 230, 118, 0.25) 0%, rgba(24, 20, 72, 0.95) 100%)',
+                    border: '2px solid #00e676',
+                    borderRadius: 16,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    gap: 12,
+                    marginTop: 8,
+                  }}
+                >
+                  <Mascot mood="celebrating" size="medium" />
+                  <div>
+                    <h4 style={{ color: '#00e676', fontFamily: 'var(--font-display)', fontSize: '1.3rem', margin: 0 }}>
+                      🎉 Simulation 1 Completed!
+                    </h4>
+                    <p style={{ color: 'var(--text-secondary)', margin: '4px 0 0', fontSize: '0.9rem' }}>
+                      You've conquered slope as steepness and rise over run!
+                    </p>
+                  </div>
+                  <button
+                    className="btn btn-primary"
+                    onClick={onComplete}
+                    style={{
+                      width: '100%',
+                      background: 'linear-gradient(135deg, #00e676 0%, #00e5ff 100%)',
+                      color: '#0a0a2e',
+                      fontWeight: 900,
+                      boxShadow: '0 4px 18px rgba(0, 230, 118, 0.45)',
+                      padding: '14px 24px',
+                      fontSize: '1.05rem',
+                    }}
+                  >
+                    <span>Go to Next Simulation (Line Lab)</span>
+                    <ArrowRight size={20} />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

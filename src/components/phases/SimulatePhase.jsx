@@ -83,6 +83,48 @@ export default function SimulatePhase({
 
         {/* Active Station Stage */}
         <div className="simulation-active-stage">
+          {completedStations[stationIdx] && stationIdx < 3 && (
+            <div
+              style={{
+                background: 'linear-gradient(135deg, rgba(0, 230, 118, 0.2) 0%, rgba(24, 20, 72, 0.9) 100%)',
+                border: '1.5px solid #00e676',
+                borderRadius: 16,
+                padding: '14px 20px',
+                marginBottom: 18,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: 12,
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <CheckCircle size={22} color="#00e676" />
+                <span style={{ fontWeight: 800, color: '#ffffff', fontSize: '1rem' }}>
+                  🎉 {STATIONS[stationIdx]?.name} Complete! Ready for the next simulation?
+                </span>
+              </div>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  const nextIdx = stationIdx + 1;
+                  setStationIdx(nextIdx);
+                  narrate(stationLearnNarration(nextIdx), audioEnabled);
+                }}
+                style={{
+                  padding: '10px 22px',
+                  fontSize: '0.95rem',
+                  background: 'linear-gradient(135deg, #00e676 0%, #00e5ff 100%)',
+                  color: '#0a0a2e',
+                  fontWeight: 900,
+                }}
+              >
+                <span>Go to Next Simulation ({STATIONS[stationIdx + 1]?.name})</span>
+                <ArrowRight size={16} />
+              </button>
+            </div>
+          )}
+
           {stationIdx === 0 && (
             <SlopeExplorerStation
               audioEnabled={audioEnabled}
@@ -129,10 +171,34 @@ export default function SimulatePhase({
             </div>
           </div>
 
-          <button className="btn btn-primary" onClick={onNext} style={{ minWidth: 200 }}>
-            <span>{allDone ? 'Enter Practice Phase' : 'Go to Practice Phase'}</span>
-            <ArrowRight size={18} />
-          </button>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+            {stationIdx < 3 && (
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  const nextIdx = stationIdx + 1;
+                  setStationIdx(nextIdx);
+                  narrate(stationLearnNarration(nextIdx), audioEnabled);
+                }}
+                style={{
+                  background: completedStations[stationIdx]
+                    ? 'linear-gradient(135deg, #00e676 0%, #00e5ff 100%)'
+                    : 'linear-gradient(135deg, #00e5ff 0%, #3f51b5 100%)',
+                  color: completedStations[stationIdx] ? '#0a0a2e' : '#ffffff',
+                  fontWeight: 800,
+                  boxShadow: '0 4px 16px rgba(0, 229, 255, 0.4)',
+                }}
+              >
+                <span>Go to Next Simulation ({STATIONS[stationIdx + 1]?.name})</span>
+                <ArrowRight size={18} />
+              </button>
+            )}
+
+            <button className="btn btn-secondary" onClick={onNext} style={{ minWidth: 170 }}>
+              <span>{allDone ? 'Enter Practice Phase' : 'Skip to Practice Phase'}</span>
+              <ArrowRight size={18} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
